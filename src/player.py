@@ -2,7 +2,7 @@
 # currently.
 
 class Player:
-    def __init__(self, name, current_room):
+    def __init__(self, name, current_room, hp = 100):
         self.name = name
         self.current_room = current_room
         self.items = []
@@ -48,3 +48,11 @@ class Player:
             for item in self.items:
                 print(f'{count}. {item.name} - {item.description}')
                 count += 1
+    
+    def attack(self, monster):
+        target = next((d for d in self.current_room.monsters if d.name == monster), None) 
+        
+        if target:
+            target.on_attack()
+        else:
+            print(f'There is no {monster} in this room')

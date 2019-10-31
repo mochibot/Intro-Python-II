@@ -1,8 +1,9 @@
 from room import Room
 from player import Player
 from item import Item
+from monster import Monster
 
-# Declar items
+# Declare items
 item = {
     'coins': Item('coins', 'Make you richer'),
     'snack': Item('snack', 'Restore your health a little bit'),
@@ -11,6 +12,14 @@ item = {
     'sword': Item('sword', 'Better than dagger'),
     'shield': Item('shield', 'Reduce incoming damage')
 }
+
+# Declare monsters
+monster = {
+    'toxiccat': Monster('Toxiccat'),
+    'evilhamster': Monster('Evilhamster'),
+    'webmorph': Monster('Webmorph')
+}
+
 
 # Declare all the rooms
 
@@ -44,10 +53,15 @@ room['treasure'].s_to = room['narrow']
 
 # Add items to room
 
-room['foyer'].items = [item['snack']]
+room['foyer'].items = [item['dagger']]
 room['overlook'].items = [item['shield']]
-room['narrow'].items = [item['dagger']]
+room['narrow'].items = [item['snack']]
 room['treasure'].items = [item['coins'], item['potion'], item['sword']]
+
+# Add monsters to room
+
+room['treasure'].monsters=[monster['webmorph'], monster['toxiccat']]
+room['narrow'].monsters=[monster['evilhamster']]
 
 #
 # Main
@@ -71,7 +85,7 @@ player1 = Player('Player1', room['outside'])
 print('========GAME START==========')
 print(f'You are currently in: {player1.current_room.name}')
 print(player1.current_room.description)
-print('Commands:\nn -- move north | s -- move south | e -- move east | w -- move west |\npick [item_name] -- pick up item | drop [item_name] -- drop item |\nshow -- show available items in room | inventory -- show items in inventory | q -- quit ')
+print('Commands:\nn -- move north | s -- move south | e -- move east | w -- move west |\npick [item_name] -- pick up item | drop [item_name] -- drop item |\nshow -- show available items in room | inventory -- show items in inventory |\nattack [monster name]-- attack monster  | q -- quit ')
 
 while True:
     command = input('Enter command: ')
@@ -79,17 +93,26 @@ while True:
     if command == 'q':
         print('Goodbye')
         break
+    
     elif command in ['n', 'w', 'e', 's']:
         player1.move_room(command)
+        player1.current_room.show_monsters()     #as player enters new room, show monsters if there are any
+    
     elif command == 'show':
         player1.current_room.show_items()
+    
     elif command == 'inventory':
         player1.show_items()
+    
     elif len(command.split()) == 2:
         if command.split()[0] == 'take':
             player1.take(command.split()[1])
         elif command.split()[0] == 'drop':
             player1.drop(command.split()[1])
+        elif command.split()[0] == 'attack':
+            player1.attack(command.split()[1])
+            player1.current_room.show_monsters()       #show remaining monsters in the room if there are any
+    
     else:
         print('Please enter a valid command (n, s, e, w, pick [item], drop [item], show, inventory q).')
         continue
