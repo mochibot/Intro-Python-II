@@ -13,22 +13,38 @@ class Player:
                  'e': self.current_room.e_to,
                  'w': self.current_room.w_to}
 
-        if moves[direction] != None:
+        if moves[direction]:
             self.current_room = moves[direction]
+            print(f'You are now in: {self.current_room.name}')
+            print(self.current_room.description)
         else:
             print('Move is not allowed')
     
     def take(self, item):
-        item.on_take()
-        self.items.append(item)
+        #note Item is not subscriptable
+        new_item = next((d for d in self.current_room.items if d.name == item), None)     #returns the next item in the iterator or default value 
+        
+        if new_item:   
+            new_item.on_take()
+            self.items.append(new_item)
+        else:
+            print(f'{item} is not available in this room')
     
     def drop(self, item):
-        item.on_drop()
-        self.items.remove(item)
+        discard_item = next((d for d in self.items if d.name == item), None) 
+
+        if discard_item:
+            discard_item.on_drop()
+            self.items.remove(discard_item)
+        else:
+            print(f'{item} is not in your inventory')
     
     def show_items(self):
         if len(self.items) == 0:
             print('There is no items in your inventory')
         else:
+            count = 1
+            print('Here are your items:')
             for item in self.items:
-                print(item.name)
+                print(f'{count}. {item.name} - {item.description}')
+                count += 1

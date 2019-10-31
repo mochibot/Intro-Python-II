@@ -15,5 +15,8 @@ class Room:
         if len(self.items) == 0:
             print('There is no items in this room')
         else:
+            count = 1
+            print('Here are the items in this room:')
             for item in self.items:
-                print(item.name)
+                print(f'{count}. {item.name} - {item.description}')
+                count += 1

@@ -68,19 +68,28 @@ player1 = Player('Player1', room['outside'])
 #
 # If the user enters "q", quit the game.
 
-'''
-while True:
-    print(f'You are currently in: {player1.current_room.name}')
-    print(player1.current_room.description)
-    print('Commands: n -- move north | s -- move south | e -- move east | w -- move west | q -- quit')
-    input_direction = input('Enter the direction to move to: ')
+print('========GAME START==========')
+print(f'You are currently in: {player1.current_room.name}')
+print(player1.current_room.description)
+print('Commands:\nn -- move north | s -- move south | e -- move east | w -- move west |\npick [item_name] -- pick up item | drop [item_name] -- drop item |\nshow -- show available items in room | inventory -- show items in inventory | q -- quit ')
 
-    if input_direction == 'q':
+while True:
+    command = input('Enter command: ')
+
+    if command == 'q':
         print('Goodbye')
         break
-    elif input_direction == 'n' or input_direction == 'w' or input_direction =='e' or input_direction == 's':
-        player1.move_room(input_direction)
+    elif command in ['n', 'w', 'e', 's']:
+        player1.move_room(command)
+    elif command == 'show':
+        player1.current_room.show_items()
+    elif command == 'inventory':
+        player1.show_items()
+    elif len(command.split()) == 2:
+        if command.split()[0] == 'take':
+            player1.take(command.split()[1])
+        elif command.split()[0] == 'drop':
+            player1.drop(command.split()[1])
     else:
-        print('Please select a valid option (n, s, e, w, q).')
+        print('Please enter a valid command (n, s, e, w, pick [item], drop [item], show, inventory q).')
         continue
-'''
